@@ -1,0 +1,3 @@
+energy,liveness,tempo,speechiness,acousticness,instrumentalness,time_signature,danceability,key,duration_ms,loudness,valence,mode,type,uri
+0.913,0.293,118.9,0.11,0.00546,0.000122,4,0.416,10,226840,-11.475,0.584,0,audio_features,spotify:track:2RWVhDyyfKhJuDv87G55uw
+0.781,0.166,71.841,0.0377,1.33e-05,0.205,4,0.443,1,214760,-4.277,0.372,1,audio_features,spotify:track:1158ckiB5S4cpsdYHDB9IF
