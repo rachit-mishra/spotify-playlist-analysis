@@ -1,0 +1,10 @@
+{
+    "access_credentials":
+    {
+        "client_id": "97b72e4133f3495c88c50016f4ac3347",
+        "client_secret": "3bb3891a7a68420a817cdd9a5a2a5552",
+        "redirect_uri": "http://localhost:8888/callback",
+        "scope": "user-library-read"
+    }
+
+}
