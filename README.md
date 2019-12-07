@@ -3,7 +3,7 @@ Analyzing my personal spotify playlists - Exploratory analysis, predictive analy
 
 **To run the script**,
 
-spark-submit features_processing.py <username> <playlistname> <config_path>
+`spark-submit --files <location to config> features_processing.py <username> <playlistname> <config_file.json>`
 
 Test>
 Spark command to execute this job:
