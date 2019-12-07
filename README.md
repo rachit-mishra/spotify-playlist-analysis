@@ -11,16 +11,16 @@ Spark command to execute this job:
 `spark-submit --files /Users/rachitmishra/Documents/projects/spotify-playlist-analysis/config/config.json features_processing.py rachit.mishra94 'A lot of rap songs' config.json`
 
 
-My spotify playlist: https://open.spotify.com/playlist/5egszXQsTHlXuapxfGzK79
+# My spotify playlists: (used for testing)
+1. https://open.spotify.com/playlist/5egszXQsTHlXuapxfGzK79
+2. https://open.spotify.com/playlist/1VzO6phA696s1CRvzMCgbQ?si=caCr6dJlSOmt4HzPeNKI2g
 
-python3 features_processing.py rachit.mishra94 "HATE ISN'T A STRONG WORD"
 
 
-
-References:
+# References:
 1.https://buildmedia.readthedocs.org/media/pdf/spotipy/latest/spotipy.pdf
 2.https://nvbn.github.io/2019/10/14/playlist-analysis/
 
 
-Spotify developer API docs:
+# Spotify developer API docs:
 https://developer.spotify.com/documentation/web-api/reference/playlists/get-playlists-tracks/
