@@ -13,17 +13,6 @@ from pyspark.sql import SQLContext
 from pyspark.sql import HiveContext
 from pyspark import SparkConf
 
-"""
-Setting Spark Configurations
-"""
-################### Defining spark context/python conf ###############
-sc = SparkContext()
-sc.setLogLevel("WARN")
-sqlContext = HiveContext(sc)
-
-os.environ['PYSPARK_PYTHON'] = '/usr/local/bin/python3'
-################### Defining spark context/python conf ###############
-
 
 def authentication(username):
     conf_file_path = SparkFiles.get(sys.argv[3])
@@ -165,6 +154,10 @@ def main(username, playlist):
             songs_and_artists(sp,username, check_playlist['id'], check_playlist['name'])
 
 if __name__ == '__main__':
+    sc = SparkContext()
+    sc.setLogLevel("WARN")
+    sqlContext = HiveContext(sc)
+    os.environ['PYSPARK_PYTHON'] = '/usr/local/bin/python3'
     username = sys.argv[1]
     playlist = sys.argv[2]
     main(username, playlist)
