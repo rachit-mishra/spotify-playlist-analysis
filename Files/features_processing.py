@@ -25,8 +25,6 @@ os.environ['PYSPARK_PYTHON'] = '/usr/local/bin/python3'
 ################### Defining spark context/python conf ###############
 
 
-
-
 def authentication(username):
     conf_file_path = SparkFiles.get(sys.argv[3])
     
@@ -82,12 +80,12 @@ def retrieve_playlist_content(username, playlist_id):
     return sp, song_content, playlist_content , playlist_ids
 
 
-def features_processing(username, playlist_id):
+def features_processing(username, playlist_id, playlist_name):
     """
     Method to process the audio features 
     for songs in the playlist
     """
-    sp, playlists,playlist_content,playlist_ids = retrieve_playlist_content(username, playlist_id)
+    sp, song_content,playlist_content,playlist_ids = retrieve_playlist_content(username, playlist_id)
     token = authentication(username)
     playlist_ids = []   
     song_content = []
@@ -116,8 +114,8 @@ def features_processing(username, playlist_id):
     
     return list_features
 
-def write_to_file(username, playlist_id):
-    list_features = features_processing(username,playlist_id)
+def write_to_file(username, playlist_id, playlist_name):
+    list_features = features_processing(username,playlist_id, playlist_name)
     processed_features = []
     """
     Writing audio features to a dataframe
@@ -127,9 +125,27 @@ def write_to_file(username, playlist_id):
         features['liveness'],features['tempo'], features['speechiness'],features['acousticness'], features['instrumentalness'],features['time_signature'], features['danceability'], features['key'], features['duration_ms'],features['loudness'], features['valence'],features['mode'], features['type'],features['uri']])
     
     df = pd.DataFrame(processed_features, columns = ['energy','liveness','tempo','speechiness','acousticness','instrumentalness', 'time_signature', 'danceability','key', 'duration_ms', 'loudness','valence', 'mode', 'type', 'uri'])
-    #df.to_csv('{}_____{}.csv'.format(username,playlist_id), index=False)
+    df.to_csv('{}_____{}.csv'.format(username,playlist_name), index=False)
     print(df.head(5))
     return df
+
+"""
+Analyzing songs from individual artist - Likeness of individual artists, etc.
+"""
+def songs_and_artists(sp,username, playlist_id, playlist):
+    playlists = sp.user_playlists(username)
+    sp, song_content, playlist_content , playlist_ids = retrieve_playlist_content(username, playlist_id)
+
+    artists_and_songs = []
+    for check_playlist in playlists['items']:
+        if check_playlist['name'] in playlist:
+            tracks = playlist_content['items']
+            for track in tracks:
+                artists_and_songs.append([track['track']['id'],track['track']['artists'][0]['name'],track['track']['name']])
+            
+            df_artists = pd.DataFrame(artists_and_songs, columns=['Song id', 'Artist name', 'Song Name'])
+            print(df_artists.head(10))
+    
 
 def main(username, playlist):
     token = authentication(username)
@@ -143,8 +159,9 @@ def main(username, playlist):
                         check_playlist['tracks']['total'],
                         check_playlist['id']))
             retrieve_playlist_content(username, check_playlist['id'])
-            features_processing(username, check_playlist['id'])
-            write_to_file(username, check_playlist['id'])
+            features_processing(username, check_playlist['id'], check_playlist['name'])
+            write_to_file(username, check_playlist['id'],check_playlist['name'])
+            songs_and_artists(sp,username, check_playlist['id'], check_playlist['name'])
 
 if __name__ == '__main__':
     username = sys.argv[1]
