@@ -48,16 +48,6 @@ def retrieve_playlist_content(username, playlist_id):
         sp = spotipy.Spotify(auth=token)
         playlists = sp.user_playlists(username)
         playlist_content = sp.user_playlist_tracks(username, playlist_id, limit = 100, fields = None)
-        
-        """
-        Logic to return tracks in a playlist
-        """
-        # for tracks in playlist_content['items']:
-        #     count+=1
-        # print(count)
-            #print(tracks['track'])
-        #     song_names.append(tracks['track']['name'])
-        # print(song_names)
         song_content.append(playlist_content['items'])
         if playlist_content['next'] is not None:
             count+=1
@@ -96,9 +86,6 @@ def features_processing(username, playlist_id, playlist_name):
         while i < len(playlist_ids):
             list_features += sp.audio_features(playlist_ids[i:i+1])
             i+=1
-
-        #print(list_features)
-
     else:
         print("Unable to retrieve token for: ", username)    
     
