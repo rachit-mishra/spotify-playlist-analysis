@@ -32,12 +32,13 @@ def authentication(username):
         conf_file = json.load(file)
         #print(conf_file)
     
-    
+    """ Reading from config file """
     client_id = conf_file["access_credentials"]["client_id"]
     client_secret = conf_file["access_credentials"]["client_secret"]
     redirect_uri = conf_file["access_credentials"]["redirect_uri"]
     scope = conf_file["access_credentials"]["scope"]
-    
+    """ Reading from config file """
+
     try:
         token = util.prompt_for_user_token(username, scope, client_id, client_secret, redirect_uri)
     except (AttributeError, JSONDecodeError):
