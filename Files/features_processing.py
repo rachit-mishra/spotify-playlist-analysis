@@ -7,6 +7,7 @@ from json.decoder import JSONDecodeError
 import json 
 import pandas as pd
 import json
+#import matplotlib.pyplot.scatter import plot
 
 from pyspark import SparkContext, SparkFiles
 from pyspark.sql import SQLContext
@@ -86,6 +87,8 @@ def features_processing(username, playlist_id, playlist_name):
         while i < len(playlist_ids):
             list_features += sp.audio_features(playlist_ids[i:i+1])
             i+=1
+    
+    
     else:
         print("Unable to retrieve token for: ", username)    
     
@@ -102,7 +105,10 @@ def write_to_file(username, playlist_id, playlist_name):
         features['liveness'],features['tempo'], features['speechiness'],features['acousticness'], features['instrumentalness'],features['time_signature'], features['danceability'], features['key'], features['duration_ms'],features['loudness'], features['valence'],features['mode'], features['type'],features['uri']])
     
     df = pd.DataFrame(processed_features, columns = ['energy','liveness','tempo','speechiness','acousticness','instrumentalness', 'time_signature', 'danceability','key', 'duration_ms', 'loudness','valence', 'mode', 'type', 'uri'])
-    df.to_csv('{}_____{}.csv'.format(username,playlist_name), index=False)
+    
+    df.plot(kind='scatter', x='danceability', y='valence')
+    
+    #df.to_csv('{}_____{}.csv'.format(username,playlist_name), index=False)
     print(df.head(5))
     return df
 
@@ -120,8 +126,11 @@ def songs_and_artists(sp,username, playlist_id, playlist):
             for track in tracks:
                 artists_and_songs.append([track['track']['id'],track['track']['artists'][0]['name'],track['track']['name']])
             
-            df_artists = pd.DataFrame(artists_and_songs, columns=['Song id', 'Artist name', 'Song Name'])
-            print(df_artists.head(10))
+            df_artists = pd.DataFrame(artists_and_songs, columns=['Song_id', 'Artist_Name', 'Song_Name'])
+            print(df_artists.groupby('Artist_Name').count()['Song_id'].reset_index().sort_values('Song_id', ascending=False).rename(columns={'Song_id':'Song_count'}).head(20))
+            
+            #print(df_artists.head(10))
+    
     
 
 def main(username, playlist):
@@ -141,9 +150,6 @@ def main(username, playlist):
             songs_and_artists(sp,username, check_playlist['id'], check_playlist['name'])
 
 if __name__ == '__main__':
-    sc = SparkContext()
-    sc.setLogLevel("WARN")
-    sqlContext = HiveContext(sc)
     os.environ['PYSPARK_PYTHON'] = '/usr/local/bin/python3'
     username = sys.argv[1]
     playlist = sys.argv[2]
